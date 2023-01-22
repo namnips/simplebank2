@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/namnips/simplebank/util"
-
 	"github.com/stretchr/testify/require"
 )
 
@@ -20,18 +19,18 @@ func createRandomAccount(t *testing.T) Account {
 		Currency: util.RandomCurrency(),
 	}
 
-	acccount, err := testQueries.CreateAccount(context.Background(), arg)
+	account, err := testQueries.CreateAccount(context.Background(), arg)
 	require.NoError(t, err)
-	require.NotEmpty(t, acccount)
+	require.NotEmpty(t, account)
 
-	require.Equal(t, arg.Owner, acccount.Owner)
-	require.Equal(t, arg.Balance, acccount.Balance)
-	require.Equal(t, arg.Currency, acccount.Currency)
+	require.Equal(t, arg.Owner, account.Owner)
+	require.Equal(t, arg.Balance, account.Balance)
+	require.Equal(t, arg.Currency, account.Currency)
 
-	require.NotZero(t, acccount.ID)
-	require.NotZero(t, acccount.CreatedAt)
+	require.NotZero(t, account.ID)
+	require.NotZero(t, account.CreatedAt)
 
-	return acccount
+	return account
 }
 
 func TestCreateAccount(t *testing.T) {
@@ -42,7 +41,7 @@ func TestGetAccount(t *testing.T) {
 	account1 := createRandomAccount(t)
 	account2, err := testQueries.GetAccount(context.Background(), account1.ID)
 	require.NoError(t, err)
-	require.NotEmpty(t, account1)
+	require.NotEmpty(t, account2)
 
 	require.Equal(t, account1.ID, account2.ID)
 	require.Equal(t, account1.Owner, account2.Owner)

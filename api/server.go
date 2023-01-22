@@ -3,13 +3,12 @@ package api
 import (
 	"fmt"
 
+	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 	db "github.com/namnips/simplebank/db/sqlc"
 	"github.com/namnips/simplebank/token"
 	"github.com/namnips/simplebank/util"
-
-	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
 )
 
 // Server serves HTTP requests for our banking service.
@@ -37,24 +36,21 @@ func NewServer(config util.Config, store db.Store) (*Server, error) {
 		v.RegisterValidation("currency", validCurrency)
 	}
 
-	server.setUpRouter()
+	server.setupRouter()
 	return server, nil
 }
 
-func (server *Server) setUpRouter() {
+func (server *Server) setupRouter() {
 	router := gin.Default()
 
 	router.POST("/users", server.createUser)
 	router.POST("/users/login", server.loginUser)
-	// router.POST("/tokens/renew_access", server.renewAccessToken)
+	router.POST("/tokens/renew_access", server.renewAccessToken)
 
 	authRoutes := router.Group("/").Use(authMiddleware(server.tokenMaker))
-
 	authRoutes.POST("/accounts", server.createAccount)
 	authRoutes.GET("/accounts/:id", server.getAccount)
-	authRoutes.GET("/accounts", server.listAccount)
-	authRoutes.PUT("/accounts", server.updateAccount)
-	authRoutes.DELETE("/accounts/:id", server.deleteAccount)
+	authRoutes.GET("/accounts", server.listAccounts)
 
 	authRoutes.POST("/transfers", server.createTransfer)
 

@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/namnips/simplebank/util"
-
 	"github.com/stretchr/testify/require"
 )
 
